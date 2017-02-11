@@ -13,32 +13,45 @@ import org.bukkit.plugin.java.JavaPlugin;
 /**
  * Created by toonsev on 2/4/2017.
  */
-public class Main extends JavaPlugin implements Listener{
+public class Main extends JavaPlugin implements Listener {
     private ServerIdProvider serverIdProvider;
     private PlayersServiceAPI playersServiceAPI;
-    private ExoBaseAPI exoBaseAPI;
+    private static ExoBaseAPI exoBaseAPI;
+    private static Main instance;
 
     @Override
     public void onEnable() {
+        Main.instance = this;
         this.serverIdProvider = new ServerUUIDProvider();
         this.playersServiceAPI = new PlayersServiceAPI(getPlayersServiceAddress());
-        this.exoBaseAPI = new SimpleExoBaseAPI(
-                serverIdProvider,
-                new SimplePlayersServiceProvider(this, serverIdProvider, playersServiceAPI));
+
 
         Bukkit.getPluginManager().registerEvents(this, this);
     }
 
-    private String getPlayersServiceAddress(){
+    private String getPlayersServiceAddress() {
         String address = System.getenv("PLAYERS_SERVICE_ADDRESS");
-        if(address == null){
+        if (address == null) {
             System.out.println("ExoBasePlugin: Fatal error: " + "No PLAYERS_SERVICE_ADDRESS env var provided.");
             Bukkit.shutdown();
         }
         return address;
     }
+
+    private static Main getInstance() {
+        return instance;
+    }
+
+    public static synchronized ExoBaseAPI getAPI() {
+        if (exoBaseAPI == null)
+            Main.exoBaseAPI = new SimpleExoBaseAPI(
+                    Main.getInstance().serverIdProvider,
+                    new SimplePlayersServiceProvider(Main.getInstance(), getInstance().serverIdProvider, Main.getInstance().playersServiceAPI));
+        return Main.exoBaseAPI;
+    }
+
     @EventHandler
-    public void onJoin(PlayerJoinEvent event){
+    public void onJoin(PlayerJoinEvent event) {
         exoBaseAPI.onJoin(event.getPlayer());
     }
 }

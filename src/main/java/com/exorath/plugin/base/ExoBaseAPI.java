@@ -10,4 +10,8 @@ public interface ExoBaseAPI {
     String getServerId();
 
     void onJoin(Player player);
+
+    static ExoBaseAPI getInstance(){
+        return Main.getAPI();
+    }
 }

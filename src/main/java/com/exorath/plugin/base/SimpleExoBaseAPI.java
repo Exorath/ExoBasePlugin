@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
  * Created by toonsev on 2/4/2017.
  */
 public class SimpleExoBaseAPI implements ExoBaseAPI {
+    private SimpleExoBaseAPI instance;
     private ServerIdProvider serverIdProvider;
     private PlayersServiceProvider playersServiceProvider;
 
