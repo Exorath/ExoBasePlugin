@@ -6,9 +6,7 @@ import com.exorath.plugin.base.serverId.ServerIdProvider;
 import com.exorath.plugin.base.serverId.ServerUUIDProvider;
 import com.exorath.service.players.api.PlayersServiceAPI;
 import org.bukkit.Bukkit;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -57,17 +55,15 @@ public class Main extends JavaPlugin implements Listener {
     }
 
     public static synchronized ExoBaseAPI getAPI() {
-        if (exoBaseAPI == null)
-            Main.exoBaseAPI = new SimpleExoBaseAPI(
+        if (exoBaseAPI == null) {
+            SimpleExoBaseAPI exoBaseAPI = new SimpleExoBaseAPI(
                     Main.getInstance().serverIdProvider,
                     new SimplePlayersServiceProvider(Main.getInstance(), getInstance().serverIdProvider, Main.getInstance().playersServiceAPI),
                     Main.getInstance().connectorServiceProvider
             );
+            Bukkit.getPluginManager().registerEvents(exoBaseAPI, Main.getInstance());
+            Main.exoBaseAPI = exoBaseAPI;
+        }
         return Main.exoBaseAPI;
-    }
-
-    @EventHandler
-    public void onJoin(PlayerJoinEvent event) {
-        exoBaseAPI.onJoin(event.getPlayer());
     }
 }

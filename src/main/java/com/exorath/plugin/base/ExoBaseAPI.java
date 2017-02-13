@@ -10,7 +10,6 @@ import org.bukkit.entity.Player;
 public interface ExoBaseAPI {
     String getServerId();
 
-    void onJoin(Player player);
 
     void onGameJoin(Player player);
 

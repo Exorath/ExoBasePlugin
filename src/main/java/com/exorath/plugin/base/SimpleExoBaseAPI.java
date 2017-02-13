@@ -6,11 +6,14 @@ import com.exorath.plugin.base.serverId.ServerIdProvider;
 import com.exorath.service.connector.res.BasicServer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 /**
  * Created by toonsev on 2/4/2017.
  */
-public class SimpleExoBaseAPI implements ExoBaseAPI {
+public class SimpleExoBaseAPI implements ExoBaseAPI, Listener{
     private SimpleExoBaseAPI instance;
     private ServerIdProvider serverIdProvider;
     private PlayersServiceProvider playersServiceProvider;
@@ -42,11 +45,11 @@ public class SimpleExoBaseAPI implements ExoBaseAPI {
         return serverIdProvider.getServerId();
     }
 
-    @Override
-    public void onJoin(Player player) {
-        playersServiceProvider.putPlayer(player).subscribe(success -> {
+    @EventHandler
+    public void onJoin(PlayerJoinEvent joinEvent) {
+        playersServiceProvider.putPlayer(joinEvent.getPlayer()).subscribe(success -> {
             if (!success.getSuccess())
-                player.sendMessage(ChatColor.RED + "An error occurred while updating the player registry, the network may malfunction.");
+                joinEvent.getPlayer().sendMessage(ChatColor.RED + "An error occurred while updating the player registry, the network may malfunction.");
         });
     }
 }
