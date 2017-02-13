@@ -68,6 +68,11 @@
     <dependencies>
         <dependency>
             <groupId>com.github.Exorath</groupId>
+            <artifactId>ConnectorService</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.Exorath</groupId>
             <artifactId>PlayersService</artifactId>
             <version>1.0.0</version>
         </dependency>

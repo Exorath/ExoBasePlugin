@@ -1,5 +1,6 @@
 package com.exorath.plugin.base;
 
+import com.exorath.plugin.base.connectorService.ConnectorServiceProvider;
 import com.exorath.plugin.base.playersService.SimplePlayersServiceProvider;
 import com.exorath.plugin.base.serverId.ServerIdProvider;
 import com.exorath.plugin.base.serverId.ServerUUIDProvider;
@@ -16,6 +17,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin implements Listener {
     private ServerIdProvider serverIdProvider;
     private PlayersServiceAPI playersServiceAPI;
+    private ConnectorServiceProvider connectorServiceProvider;
+
     private static ExoBaseAPI exoBaseAPI;
     private static Main instance;
 
@@ -24,9 +27,20 @@ public class Main extends JavaPlugin implements Listener {
         Main.instance = this;
         this.serverIdProvider = new ServerUUIDProvider();
         this.playersServiceAPI = new PlayersServiceAPI(getPlayersServiceAddress());
+        this.connectorServiceProvider = new ConnectorServiceProvider(getConnectorServiceAddress(), this);
+        Bukkit.getPluginManager().registerEvents(connectorServiceProvider, this);
 
 
         Bukkit.getPluginManager().registerEvents(this, this);
+    }
+
+    private String getConnectorServiceAddress() {
+        String address = System.getenv("CONNECTOR_SERVICE_ADDRESS");
+        if (address == null) {
+            System.out.println("ExoBasePlugin: Fatal error: " + "No CONNECTOR_SERVICE_ADDRESS env var provided.");
+            Bukkit.shutdown();
+        }
+        return address;
     }
 
     private String getPlayersServiceAddress() {
@@ -46,7 +60,9 @@ public class Main extends JavaPlugin implements Listener {
         if (exoBaseAPI == null)
             Main.exoBaseAPI = new SimpleExoBaseAPI(
                     Main.getInstance().serverIdProvider,
-                    new SimplePlayersServiceProvider(Main.getInstance(), getInstance().serverIdProvider, Main.getInstance().playersServiceAPI));
+                    new SimplePlayersServiceProvider(Main.getInstance(), getInstance().serverIdProvider, Main.getInstance().playersServiceAPI),
+                    Main.getInstance().connectorServiceProvider
+            );
         return Main.exoBaseAPI;
     }
 

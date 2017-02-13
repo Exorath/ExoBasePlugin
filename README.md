@@ -5,3 +5,4 @@ The ExoBasePlugin is a plugin that runs on every Exorath server. It is responsib
 | Name | Value |
 | --------- | --- |
 | PLAYERS_SERVICE_ADDRESS | {players service address} |
+| CONNECTOR_SERVICE_ADDRESS | {connector service address} |
