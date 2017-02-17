@@ -1,3 +1,3 @@
 name: ExoBase
 version: 0.0.1
-main: com.exorath.plugin.connector.Main
+main: com.exorath.plugin.base.Main
