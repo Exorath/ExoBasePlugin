@@ -34,7 +34,7 @@ public class ConnectorServiceProvider implements Listener {
         this.connectorServiceAPI = new ConnectorServiceAPI(address);
         this.plugin = plugin;
         this.serverPoster = new ServerPoster();
-        serverPoster.runTaskTimer(plugin, 0l, REPOST_DELAY);
+        serverPoster.runTaskTimer(plugin, 0l, REPOST_DELAY * 20 / 1000);
     }
 
     public void setJoinable(boolean joinable) {
