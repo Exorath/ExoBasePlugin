@@ -29,12 +29,17 @@ public class ConnectorServiceProvider implements Listener {
 
     private ServerPoster serverPoster;
 
+    public boolean overrideJoinable = false;
 
     public ConnectorServiceProvider(String address, Plugin plugin) {
         this.connectorServiceAPI = new ConnectorServiceAPI(address);
         this.plugin = plugin;
         this.serverPoster = new ServerPoster();
         serverPoster.runTaskTimer(plugin, 0l, REPOST_DELAY * 20 / 1000);
+    }
+
+    public void setOverrideJoinable(boolean overrideJoinable) {
+        this.overrideJoinable = overrideJoinable;
     }
 
     public void setJoinable(boolean joinable) {
@@ -69,10 +74,10 @@ public class ConnectorServiceProvider implements Listener {
         public void post() {
             if(basicServer == null)
                 return;
-
+            boolean canJoin = overrideJoinable == true ? false : joinable;
             String[] ids = players.stream().map(player -> player.getUniqueId().toString()).collect(Collectors.toList()).toArray(new String[players.size()]);
             Server server = new Server(basicServer,
-                    joinable,
+                    canJoin,
                     getExpiry(),
                     ids,
                     ids.length,
