@@ -27,6 +27,8 @@ public class ConnectorServiceProvider implements Listener {
     private ArrayList<Player> players = new ArrayList<>();
     private int maxPlayers = 0;
 
+    private boolean shuttingDown = false;
+
     private ServerPoster serverPoster;
 
     public boolean overrideJoinable = false;
@@ -36,6 +38,16 @@ public class ConnectorServiceProvider implements Listener {
         this.plugin = plugin;
         this.serverPoster = new ServerPoster();
         serverPoster.runTaskTimer(plugin, 0l, REPOST_DELAY * 20 / 1000);
+        setupShutdownHook();
+    }
+
+    private void setupShutdownHook() {
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
+            public void run() {
+                shuttingDown = true;
+            }
+        });
     }
 
     public void setOverrideJoinable(boolean overrideJoinable) {
@@ -56,7 +68,7 @@ public class ConnectorServiceProvider implements Listener {
         serverPoster.post();
     }
 
-    public void setup(BasicServer basicServer){
+    public void setup(BasicServer basicServer) {
         this.basicServer = basicServer;
         this.joinable = true;
     }
@@ -68,11 +80,12 @@ public class ConnectorServiceProvider implements Listener {
     private class ServerPoster extends BukkitRunnable {
         @Override
         public void run() {
-            post();
+            if (!shuttingDown)
+                post();
         }
 
         public void post() {
-            if(basicServer == null)
+            if (basicServer == null)
                 return;
             boolean canJoin = overrideJoinable == true ? false : joinable;
             String[] ids = players.stream().map(player -> player.getUniqueId().toString()).collect(Collectors.toList()).toArray(new String[players.size()]);
