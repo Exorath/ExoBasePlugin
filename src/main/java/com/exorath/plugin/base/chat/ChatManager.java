@@ -44,7 +44,7 @@ public class ChatManager implements Listener {
         }
         addPlayerToSpam(uuid);
         RankPlayer rankPlayer = rankServiceAPI.getPlayer(uuid);
-        Rank rank = getRank(rankPlayer.getId());
+        Rank rank = rankPlayer == null ? null : getRank(rankPlayer.getId());
         Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> removePlayerFromSpam(uuid), getRemovalDelay(rank));
 
         String message = event.getMessage();
