@@ -56,7 +56,7 @@ public class ChatManager implements Listener {
     }
 
     private long getRemovalDelay(Rank rank) {
-        if (rank == null || rank.getId().equals("member"))
+        if (rank == null || rank.getId() == null || rank.getId().equals("member"))
             return 60;
         return 10;
     }
