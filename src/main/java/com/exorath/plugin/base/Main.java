@@ -1,10 +1,12 @@
 package com.exorath.plugin.base;
 
+import com.exorath.plugin.base.chat.ChatManager;
 import com.exorath.plugin.base.connectorService.ConnectorServiceProvider;
 import com.exorath.plugin.base.playersService.SimplePlayersServiceProvider;
 import com.exorath.plugin.base.serverId.ServerIdProvider;
 import com.exorath.plugin.base.serverId.ServerUUIDProvider;
 import com.exorath.service.players.api.PlayersServiceAPI;
+import com.exorath.service.rank.api.RankServiceAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +18,7 @@ public class Main extends JavaPlugin implements Listener {
     private ServerIdProvider serverIdProvider;
     private PlayersServiceAPI playersServiceAPI;
     private ConnectorServiceProvider connectorServiceProvider;
+    private ChatManager chatManager;
 
     private static ExoBaseAPI exoBaseAPI;
     private static Main instance;
@@ -26,6 +29,8 @@ public class Main extends JavaPlugin implements Listener {
         this.serverIdProvider = new ServerUUIDProvider();
         this.playersServiceAPI = new PlayersServiceAPI(getPlayersServiceAddress());
         this.connectorServiceProvider = new ConnectorServiceProvider(getConnectorServiceAddress(), this);
+        this.chatManager = new ChatManager(new RankServiceAPI(getRankServiceAddress()));
+        Bukkit.getPluginManager().registerEvents(chatManager, this);
         Bukkit.getPluginManager().registerEvents(connectorServiceProvider, this);
 
 
@@ -47,6 +52,14 @@ public class Main extends JavaPlugin implements Listener {
         String address = System.getenv("PLAYERS_SERVICE_ADDRESS");
         if (address == null) {
             System.out.println("ExoBasePlugin: Fatal error: " + "No PLAYERS_SERVICE_ADDRESS env var provided.");
+            Bukkit.shutdown();
+        }
+        return address;
+    }
+    private String getRankServiceAddress() {
+        String address = System.getenv("RANK_SERVICE_ADDRESS");
+        if (address == null) {
+            System.out.println("ExoBasePlugin: Fatal error: " + "No RANK_SERVICE_ADDRESS env var provided.");
             Bukkit.shutdown();
         }
         return address;
