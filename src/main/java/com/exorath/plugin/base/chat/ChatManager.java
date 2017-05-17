@@ -23,7 +23,7 @@ import java.util.Set;
 public class ChatManager implements Listener {
     private Map<String, Rank> ranks = new HashMap<>();
     private RankServiceAPI rankServiceAPI;
-    private Set<Player> spamBuffer = new HashSet<>();
+    private Set<String> spamBuffer = new HashSet<>();
 
     public ChatManager(RankServiceAPI rankServiceAPI) {
         this.rankServiceAPI = rankServiceAPI;
@@ -35,20 +35,20 @@ public class ChatManager implements Listener {
         if (event.isCancelled())
             return;
         Player p = event.getPlayer();
+        String uuid = p.getUniqueId().toString();
 
-        if (playerIsInSpam(p)) {
+        if (playerIsInSpam(uuid)) {
             p.sendMessage(ChatColor.RED + "Don't spam! Buy a Rank at https://store.exorath.com to reduce delay.");
+            event.setCancelled(true);
             return;
         }
-        addPlayerToSpam(p);
-        RankPlayer rankPlayer = rankServiceAPI.getPlayer(p.getUniqueId().toString());
+        addPlayerToSpam(uuid);
+        RankPlayer rankPlayer = rankServiceAPI.getPlayer(uuid);
         Rank rank = getRank(rankPlayer.getId());
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
-            removePlayerFromSpam(p);
-        }, getRemovalDelay(rank));
+        Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> removePlayerFromSpam(uuid), getRemovalDelay(rank));
 
         String message = event.getMessage();
-        if (rankServiceAPI.inheritsFromRank(p.getUniqueId().toString(), "VIP"))
+        if (rankServiceAPI.inheritsFromRank(uuid, "VIP"))
             message = ChatColor.translateAlternateColorCodes('&', message);
         String prefix = rank == null ? ChatColor.GRAY + ChatColor.BOLD.toString() + "M" : rank.getName();
         message = prefix + " " + ChatColor.GRAY + message;
@@ -68,16 +68,16 @@ public class ChatManager implements Listener {
         return rank;
     }
 
-    private synchronized void addPlayerToSpam(Player player) {
-        spamBuffer.add(player);
+    private synchronized void addPlayerToSpam(String uuid) {
+        spamBuffer.add(uuid);
     }
 
-    private synchronized void removePlayerFromSpam(Player player) {
-        spamBuffer.remove(player);
+    private synchronized void removePlayerFromSpam(String uuid) {
+        spamBuffer.remove(uuid);
     }
 
 
-    private synchronized boolean playerIsInSpam(Player player) {
-        return spamBuffer.contains(player);
+    private synchronized boolean playerIsInSpam(String uuid) {
+        return spamBuffer.contains(uuid);
     }
 }
