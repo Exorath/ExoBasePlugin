@@ -65,7 +65,7 @@ public class Main extends JavaPlugin implements Listener {
         return address;
     }
 
-    private static Main getInstance() {
+    public static Main getInstance() {
         return instance;
     }
 
