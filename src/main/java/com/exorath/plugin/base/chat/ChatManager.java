@@ -51,8 +51,9 @@ public class ChatManager implements Listener {
         if (rankServiceAPI.inheritsFromRank(uuid, "VIP").inherits())
             message = ChatColor.translateAlternateColorCodes('&', message);
         String prefix = rank == null ? ChatColor.GRAY + ChatColor.BOLD.toString() + "M" : rank.getName();
-        message = prefix + " " + ChatColor.GRAY + message;
+        message = prefix + " " + ChatColor.GRAY + p.getName() + ": " + message;
         event.setMessage(message);
+        event.setFormat("%2$s");
     }
 
     private long getRemovalDelay(Rank rank) {
