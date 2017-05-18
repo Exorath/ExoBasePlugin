@@ -48,7 +48,7 @@ public class ChatManager implements Listener {
         Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> removePlayerFromSpam(uuid), getRemovalDelay(rank));
 
         String message = event.getMessage();
-        if (rankServiceAPI.inheritsFromRank(uuid, "VIP"))
+        if (rankServiceAPI.inheritsFromRank(uuid, "VIP").inherits())
             message = ChatColor.translateAlternateColorCodes('&', message);
         String prefix = rank == null ? ChatColor.GRAY + ChatColor.BOLD.toString() + "M" : rank.getName();
         message = prefix + " " + ChatColor.GRAY + message;
