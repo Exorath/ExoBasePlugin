@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 /**
  * Created by toonsev on 2/4/2017.
  */
-public class SimpleExoBaseAPI implements ExoBaseAPI, Listener{
+public class SimpleExoBaseAPI implements ExoBaseAPI, Listener {
     private SimpleExoBaseAPI instance;
     private ServerIdProvider serverIdProvider;
     private PlayersServiceProvider playersServiceProvider;

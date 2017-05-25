@@ -1,5 +1,6 @@
 package com.exorath.plugin.base;
 
+import com.exorath.exomenus.MenuAPI;
 import com.exorath.plugin.base.chat.ChatManager;
 import com.exorath.plugin.base.connectorService.ConnectorServiceProvider;
 import com.exorath.plugin.base.playersService.SimplePlayersServiceProvider;
@@ -32,6 +33,7 @@ public class Main extends JavaPlugin implements Listener {
         this.chatManager = new ChatManager(new RankServiceAPI(getRankServiceAddress()));
         Bukkit.getPluginManager().registerEvents(chatManager, this);
         Bukkit.getPluginManager().registerEvents(connectorServiceProvider, this);
+        Bukkit.getPluginManager().registerEvents(new MenuAPI(this), this);
 
 
         Bukkit.getPluginManager().registerEvents(this, this);
