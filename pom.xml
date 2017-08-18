@@ -92,10 +92,5 @@
             <artifactId>RankService</artifactId>
             <version>0.0.8</version>
         </dependency>
-        <dependency>
-            <groupId>com.github.Exorath</groupId>
-            <artifactId>ExoMenus</artifactId>
-            <version>0.0.4</version>
-        </dependency>
     </dependencies>
 </project>
