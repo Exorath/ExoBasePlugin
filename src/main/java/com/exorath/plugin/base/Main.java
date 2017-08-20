@@ -39,6 +39,8 @@ public class Main extends JavaPlugin implements Listener {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> Bukkit.getScheduler().runTask(this, () -> connectorServiceProvider.setOverrideJoinable(true))));
     }
 
+
+
     private String getConnectorServiceAddress() {
         String address = System.getenv("CONNECTOR_SERVICE_ADDRESS");
         if (address == null) {

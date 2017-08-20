@@ -1,6 +1,7 @@
 package com.exorath.plugin.base;
 
 
+import com.exorath.plugin.base.manager.Manager;
 import com.exorath.service.connector.res.BasicServer;
 import org.bukkit.entity.Player;
 
@@ -20,4 +21,12 @@ public interface ExoBaseAPI {
     static ExoBaseAPI getInstance(){
         return Main.getAPI();
     }
+
+    /**
+     * If the manager is a listener, it will be automatically registered to bukkit
+     * @param manager
+     */
+    void registerManager(Manager manager);
+
+    <T extends Manager> T  getManager(Class<T> clazz);
 }
