@@ -18,9 +18,6 @@ public interface ExoBaseAPI {
 
     void setupGame(BasicServer basicServer);
 
-    static ExoBaseAPI getInstance(){
-        return Main.getAPI();
-    }
 
     /**
      * If the manager is a listener, it will be automatically registered to bukkit
@@ -29,4 +26,9 @@ public interface ExoBaseAPI {
     void registerManager(Manager manager);
 
     <T extends Manager> T  getManager(Class<T> clazz);
+    
+    static ExoBaseAPI getInstance(){
+        return Main.getAPI();
+    }
+
 }
